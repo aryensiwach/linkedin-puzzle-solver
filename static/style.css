@@ -1,0 +1,83 @@
+/* General Body and Container Styling */
+body {
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+    background-color: #f0f2f5;
+    color: #333;
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;
+    min-height: 100vh;
+    padding: 2rem;
+}
+
+.container {
+    background: #ffffff;
+    padding: 2.5rem;
+    border-radius: 12px;
+    box-shadow: 0 8px 30px rgba(0, 0, 0, 0.12);
+    width: 100%;
+    max-width: 600px;
+    text-align: center;
+}
+
+header h1 { font-size: 2.5rem; font-weight: 700; color: #1c1e21; }
+header p { font-size: 1.1rem; color: #606770; margin-bottom: 2rem; }
+
+/* Step-by-step layout */
+.step {
+    border: 1px solid #dddfe2;
+    border-radius: 8px;
+    padding: 1.5rem;
+    margin-bottom: 2rem;
+}
+.step h2 { font-size: 1.8rem; margin-top: 0; margin-bottom: 1rem; color: #1877f2; }
+
+/* Form and Controls Styling */
+.form-group { text-align: left; }
+.form-group label { display: block; font-weight: 600; margin-bottom: 0.5rem; }
+.form-group input {
+    width: 100%;
+    padding: 0.75rem;
+    border: 1px solid #dddfe2;
+    border-radius: 6px;
+    font-size: 1rem;
+    box-sizing: border-box;
+}
+
+button {
+    width: 100%;
+    padding: 0.8rem 1rem;
+    border: none;
+    border-radius: 6px;
+    background-color: #1877f2; /* LinkedIn Blue */
+    color: white;
+    font-size: 1.2rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background-color 0.3s;
+    margin-top: 1rem;
+}
+button:hover { background-color: #166fe5; }
+#solve-btn { background-color: #28a745; }
+#solve-btn:hover { background-color: #218838; }
+
+/* Loader and Result Styling */
+.loader { border: 5px solid #f3f3f3; border-top: 5px solid #1877f2; border-radius: 50%; width: 50px; height: 50px; animation: spin 1s linear infinite; margin: 2rem auto; }
+.hidden { display: none; }
+@keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+
+/* Grid and Palette in Editor */
+#palette { margin: 15px 0; }
+.color-box { width: 30px; height: 30px; display: inline-block; border: 3px solid transparent; cursor: pointer; border-radius: 50%; transition: all 0.2s; }
+.color-box:hover { transform: scale(1.1); }
+.color-box.selected { border-color: #1877f2; transform: scale(1.2); }
+
+#grid-container { display: flex; justify-content: center; }
+.grid-table { border-collapse: collapse; }
+.grid-cell { width: 35px; height: 35px; border: 1px solid #ccc; cursor: pointer; transition: transform 0.1s; }
+.grid-cell:hover { transform: scale(1.1); z-index: 10; }
+
+/* Solution Display */
+#solution-grid { display: flex; justify-content: center; }
+.solution-table { border-collapse: collapse; }
+.solution-cell { width: 45px; height: 45px; border: 1px solid #ccc; font-size: 28px; text-align: center; vertical-align: middle; }

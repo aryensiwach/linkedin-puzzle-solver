@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>LinkedIn Games Solver</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>LinkedIn Games Solver</h1>
+        </header>
+        
+        <main>
+            <div class="step">
+                <h2>Step 1: Upload Puzzle Image</h2>
+                <form id="upload-form">
+                    <div class="form-group">
+                        <label for="grid-size">Grid Size:</label>
+                        <input type="text" id="grid-size" name="gridSize" value="9x9" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="puzzle-image">Cropped Puzzle Screenshot:</label>
+                        <input type="file" id="puzzle-image" name="puzzleImage" accept="image/*" required>
+                    </div>
+                    <button type="submit">Process Image</button>
+                </form>
+            </div>
+
+            <div id="loader" class="loader hidden"></div>
+
+            <div id="editor-container" class="step hidden">
+                <h2>Step 2: Correct the Map (if needed)</h2>
+                <p>Click a color from the palette, then click on a cell to change its color.</p>
+                <div id="palette"></div>
+                <div id="grid-container"></div>
+                <button id="solve-btn">Solve Puzzle</button>
+            </div>
+            
+            <div id="result-container" class="step hidden">
+                <h2>Solution</h2>
+                <div id="solution-grid"></div>
+            </div>
+        </main>
+    </div>
+    <script src="{{ url_for('static', filename='script.js') }}"></script>
+    
+    <script src="https://cdn.counter.dev/script.js" data-id="32d99972-c769-4c2a-a7d4-afb7f9b9d95d" data-utcoffset="6"></script>
+</body>
+</html>
