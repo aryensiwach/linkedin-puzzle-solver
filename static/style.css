@@ -1,83 +1,224 @@
-/* General Body and Container Styling */
+/* --- Google Font Import --- */
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap');
+
+/* --- Dark Theme Color Palette --- */
+:root {
+    --background-dark: #12101c; /* Deep Purple Background */
+    --surface-dark: #1c1a2e;  /* Lighter container background */
+    --primary-purple: #8e44ad; /* Main Purple for buttons */
+    --accent-pink: #d81b60;   /* Accent for hover and highlights */
+    --text-light: #f0f0f5;    /* Main text color */
+    --text-muted: #a0a0b0;    /* Muted text color for paragraphs */
+    --border-color: #3a384c;
+}
+
+/* --- General Body and Layout --- */
 body {
-    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
-    background-color: #f0f2f5;
-    color: #333;
+    font-family: 'Poppins', sans-serif;
+    background-color: var(--background-dark);
+    color: var(--text-light);
     display: flex;
     justify-content: center;
     align-items: flex-start;
     min-height: 100vh;
     padding: 2rem;
+    box-sizing: border-box;
 }
 
 .container {
-    background: #ffffff;
+    background: var(--surface-dark);
     padding: 2.5rem;
-    border-radius: 12px;
-    box-shadow: 0 8px 30px rgba(0, 0, 0, 0.12);
+    border-radius: 16px;
+    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.4);
+    border: 1px solid var(--border-color);
     width: 100%;
     max-width: 600px;
     text-align: center;
 }
 
-header h1 { font-size: 2.5rem; font-weight: 700; color: #1c1e21; }
-header p { font-size: 1.1rem; color: #606770; margin-bottom: 2rem; }
+/* --- Header Styling --- */
+header h1 {
+    font-size: 2.8rem;
+    font-weight: 700;
+    color: var(--text-light);
+    margin-bottom: 0.5rem;
+}
 
-/* Step-by-step layout */
+header p {
+    font-size: 1.1rem;
+    color: var(--text-muted);
+    margin-bottom: 2.5rem;
+}
+
+/* --- Step-by-step Sections --- */
 .step {
-    border: 1px solid #dddfe2;
-    border-radius: 8px;
+    background: rgba(0,0,0,0.1);
+    border: 1px solid var(--border-color);
+    border-radius: 12px;
     padding: 1.5rem;
     margin-bottom: 2rem;
 }
-.step h2 { font-size: 1.8rem; margin-top: 0; margin-bottom: 1rem; color: #1877f2; }
 
-/* Form and Controls Styling */
-.form-group { text-align: left; }
-.form-group label { display: block; font-weight: 600; margin-bottom: 0.5rem; }
-.form-group input {
-    width: 100%;
-    padding: 0.75rem;
-    border: 1px solid #dddfe2;
-    border-radius: 6px;
-    font-size: 1rem;
-    box-sizing: border-box;
+.step h2 {
+    font-size: 1.6rem;
+    margin-top: 0;
+    margin-bottom: 1rem;
+    color: var(--primary-purple);
 }
 
+/* --- Form Elements Styling --- */
+.form-group {
+    text-align: left;
+    margin-bottom: 1rem;
+}
+
+.form-group label {
+    display: block;
+    font-weight: 600;
+    margin-bottom: 0.5rem;
+    color: var(--text-muted);
+}
+
+.form-group input {
+    width: 100%;
+    padding: 0.8rem;
+    border: 2px solid var(--border-color);
+    background-color: var(--background-dark);
+    color: var(--text-light);
+    border-radius: 8px;
+    font-size: 1rem;
+    box-sizing: border-box;
+    transition: border-color 0.3s, box-shadow 0.3s;
+}
+
+.form-group input:focus {
+    outline: none;
+    border-color: var(--primary-purple);
+    box-shadow: 0 0 10px rgba(142, 68, 173, 0.5);
+}
+
+/* --- Button Styling --- */
 button {
     width: 100%;
-    padding: 0.8rem 1rem;
+    padding: 0.9rem 1rem;
     border: none;
-    border-radius: 6px;
-    background-color: #1877f2; /* LinkedIn Blue */
+    border-radius: 8px;
+    background: var(--primary-purple);
     color: white;
     font-size: 1.2rem;
     font-weight: 600;
     cursor: pointer;
-    transition: background-color 0.3s;
+    transition: all 0.3s ease;
     margin-top: 1rem;
 }
-button:hover { background-color: #166fe5; }
-#solve-btn { background-color: #28a745; }
-#solve-btn:hover { background-color: #218838; }
 
-/* Loader and Result Styling */
-.loader { border: 5px solid #f3f3f3; border-top: 5px solid #1877f2; border-radius: 50%; width: 50px; height: 50px; animation: spin 1s linear infinite; margin: 2rem auto; }
+button:hover {
+    background: var(--accent-pink);
+    transform: translateY(-3px);
+    box-shadow: 0 5px 15px rgba(216, 27, 96, 0.4);
+}
+
+#solve-btn {
+    background-color: #27ae60; /* Green for solve */
+}
+
+#solve-btn:hover {
+    background-color: #2ecc71;
+    box-shadow: 0 5px 15px rgba(46, 204, 113, 0.4);
+}
+
+/* --- Loader and Hidden Elements --- */
+.loader {
+    border: 5px solid #333;
+    border-top: 5px solid var(--accent-pink);
+    border-radius: 50%;
+    width: 50px;
+    height: 50px;
+    animation: spin 1s linear infinite;
+    margin: 2rem auto;
+}
+
 .hidden { display: none; }
 @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
 
-/* Grid and Palette in Editor */
-#palette { margin: 15px 0; }
-.color-box { width: 30px; height: 30px; display: inline-block; border: 3px solid transparent; cursor: pointer; border-radius: 50%; transition: all 0.2s; }
-.color-box:hover { transform: scale(1.1); }
-.color-box.selected { border-color: #1877f2; transform: scale(1.2); }
+/* --- Editor Grid and Palette --- */
+#palette {
+    margin: 15px 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-wrap: wrap;
+    gap: 10px;
+}
 
-#grid-container { display: flex; justify-content: center; }
-.grid-table { border-collapse: collapse; }
-.grid-cell { width: 35px; height: 35px; border: 1px solid #ccc; cursor: pointer; transition: transform 0.1s; }
-.grid-cell:hover { transform: scale(1.1); z-index: 10; }
+.color-box {
+    width: 30px;
+    height: 30px;
+    display: inline-block;
+    border: 3px solid transparent;
+    cursor: pointer;
+    border-radius: 50%;
+    transition: all 0.2s;
+}
 
-/* Solution Display */
-#solution-grid { display: flex; justify-content: center; }
-.solution-table { border-collapse: collapse; }
-.solution-cell { width: 45px; height: 45px; border: 1px solid #ccc; font-size: 28px; text-align: center; vertical-align: middle; }
+.color-box:hover {
+    transform: scale(1.15);
+}
+
+.color-box.selected {
+    border-color: var(--accent-pink);
+    transform: scale(1.25);
+    box-shadow: 0 0 10px var(--accent-pink);
+}
+
+/* --- Centering container for both grids --- */
+#grid-container, #solution-grid {
+    display: flex;
+    justify-content: center;
+}
+
+.grid-table, .solution-table {
+    border-collapse: collapse;
+}
+
+.grid-cell {
+    width: 35px;
+    height: 35px;
+    border: 1px solid var(--border-color);
+    cursor: pointer;
+}
+
+/* --- Solution Grid Styling --- */
+.solution-cell {
+    width: 40px;
+    height: 40px;
+    border: 1px solid var(--border-color);
+    font-size: 24px;
+    text-align: center;
+    vertical-align: middle;
+    color: var(--text-light); /* Queen color set to light */
+    /* Black shadow to make it visible on ANY background color */
+    text-shadow: 0px 0px 5px #000, 0px 0px 8px #000;
+}
+
+/* --- Mobile Responsiveness --- */
+@media (max-width: 600px) {
+    body {
+        padding: 1rem;
+    }
+    .container {
+        padding: 1.5rem;
+    }
+    header h1 {
+        font-size: 2rem;
+    }
+    .grid-cell {
+        width: 30px;
+        height: 30px;
+    }
+    .solution-cell {
+        width: 35px;
+        height: 35px;
+        font-size: 20px;
+    }
+}

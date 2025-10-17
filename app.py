@@ -1,7 +1,7 @@
 # --- Professional Comments in English ---
-# This Flask application serves as the backend for the LinkedIn Games Solver.
+# This Flask application serves as the backend for the LinkedIn N-Queens Solver.
 # It provides two main API endpoints:
-# 1. /process: Receives an image, processes it using OpenCV and scikit-learn,
+# 1. /process: Receives an image and grid size, processes it using OpenCV and scikit-learn,
 #    and returns a color map for the frontend editor.
 # 2. /solve: Receives a user-corrected numeric map and returns the puzzle solution.
 
@@ -14,7 +14,7 @@ import base64
 # Initialize the Flask application
 app = Flask(__name__)
 
-# --- The Solver Engine (Our perfected logic) ---
+# --- The Solver Engine ---
 def solve_puzzle_logic(board_map):
     """
     Solves the N-Queens variant puzzle using a backtracking algorithm.
@@ -54,7 +54,7 @@ def solve_puzzle_logic(board_map):
 # --- Smart Image Processor ---
 def create_map_from_image(image_bytes, rows, cols):
     """
-    Analyzes an image using K-Means clustering to accurately identify the main color regions.
+    Analyzes an image using K-Means clustering to identify the main color regions.
     """
     try:
         np_arr = np.frombuffer(image_bytes, np.uint8)
@@ -64,6 +64,7 @@ def create_map_from_image(image_bytes, rows, cols):
         
         cell_colors_bgr = [img[int(r*cell_h+cell_h/2), int(c*cell_w+cell_w/2)] for r in range(rows) for c in range(cols)]
         
+        # Use n_clusters=rows since there are 'n' queens and thus 'n' regions.
         kmeans = KMeans(n_clusters=rows, n_init=10, random_state=0)
         kmeans.fit(cell_colors_bgr)
         
@@ -104,12 +105,17 @@ def process_image_route():
         return jsonify({'error': 'No image file provided'}), 400
     
     file = request.files['puzzleImage']
-    size_str = request.form.get('gridSize', '9x9')
+    size_str = request.form.get('gridSize', '8') # Default to a single number
     
+    # --- UPDATED LOGIC TO HANDLE SINGLE NUMBER INPUT ---
     try:
-        rows, cols = map(int, size_str.lower().split('x'))
+        if 'x' in size_str.lower():
+            rows, cols = map(int, size_str.lower().split('x'))
+        else:
+            rows = cols = int(size_str)
     except ValueError:
         return jsonify({'error': 'Invalid grid size format'}), 400
+    # --- END OF UPDATED LOGIC ---
 
     image_bytes = file.read()
     color_map_hex = create_map_from_image(image_bytes, rows, cols)

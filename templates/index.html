@@ -3,22 +3,27 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>LinkedIn Games Solver</title>
+    <title>LinkedIn N-Queens Solver</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
+    
     <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
 </head>
 <body>
     <div class="container">
         <header>
-            <h1>LinkedIn Games Solver</h1>
+            <h1>N-Queens Puzzle Solver</h1>
+            <p>Upload a screenshot of your LinkedIn puzzle, and let AI solve it for you.</p>
         </header>
         
         <main>
             <div class="step">
-                <h2>Step 1: Upload Puzzle Image</h2>
+                <h2>Step 1: Upload Puzzle</h2>
                 <form id="upload-form">
                     <div class="form-group">
-                        <label for="grid-size">Grid Size:</label>
-                        <input type="text" id="grid-size" name="gridSize" value="9x9" required>
+                        <label for="grid-size">Grid Size (e.g., 8 for 8x8):</label>
+                        <input type="number" id="grid-size" name="gridSize" value="8" min="4" max="15" required>
                     </div>
                     <div class="form-group">
                         <label for="puzzle-image">Cropped Puzzle Screenshot:</label>
@@ -31,8 +36,8 @@
             <div id="loader" class="loader hidden"></div>
 
             <div id="editor-container" class="step hidden">
-                <h2>Step 2: Correct the Map (if needed)</h2>
-                <p>Click a color from the palette, then click on a cell to change its color.</p>
+                <h2>Step 2: Correct The Map</h2>
+                <p>Click a color from the palette, then paint the grid cells to match the puzzle.</p>
                 <div id="palette"></div>
                 <div id="grid-container"></div>
                 <button id="solve-btn">Solve Puzzle</button>
