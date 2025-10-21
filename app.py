@@ -1,9 +1,7 @@
 # --- Professional Comments in English ---
-# This Flask application serves as the backend for the LinkedIn N-Queens Solver.
-# It provides two main API endpoints:
-# 1. /process: Receives an image and grid size, processes it using OpenCV and scikit-learn,
-#    and returns a color map for the frontend editor.
-# 2. /solve: Receives a user-corrected numeric map and returns the puzzle solution.
+# This Flask application serves as the backend for the LinkedIn Games Solver.
+# It handles routing for different games and provides Python-based API endpoints
+# for computationally intensive tasks like image processing (N-Queens).
 
 from flask import Flask, render_template, request, jsonify
 import cv2
@@ -14,7 +12,7 @@ import base64
 # Initialize the Flask application
 app = Flask(__name__)
 
-# --- The Solver Engine ---
+# --- The Solver Engine (N-Queens) ---
 def solve_puzzle_logic(board_map):
     """
     Solves the N-Queens variant puzzle using a backtracking algorithm.
@@ -51,7 +49,7 @@ def solve_puzzle_logic(board_map):
     else:
         return None
 
-# --- Smart Image Processor ---
+# --- Smart Image Processor (N-Queens) ---
 def create_map_from_image(image_bytes, rows, cols):
     """
     Analyzes an image using K-Means clustering to identify the main color regions.
@@ -61,16 +59,16 @@ def create_map_from_image(image_bytes, rows, cols):
         img = cv2.imdecode(np_arr, cv2.IMREAD_COLOR)
         h, w, _ = img.shape
         cell_h, cell_w = h / rows, w / cols
-        
+
         cell_colors_bgr = [img[int(r*cell_h+cell_h/2), int(c*cell_w+cell_w/2)] for r in range(rows) for c in range(cols)]
-        
+
         # Use n_clusters=rows since there are 'n' queens and thus 'n' regions.
         kmeans = KMeans(n_clusters=rows, n_init=10, random_state=0)
         kmeans.fit(cell_colors_bgr)
-        
+
         official_colors_bgr = kmeans.cluster_centers_
         labels = kmeans.predict(cell_colors_bgr)
-        
+
         def bgr_to_hex(bgr):
             b, g, r = [int(c) for c in bgr]
             return f'#{r:02x}{g:02x}{b:02x}'
@@ -82,7 +80,7 @@ def create_map_from_image(image_bytes, rows, cols):
                 cluster_id = labels[color_index]
                 hex_color_map[r][c] = bgr_to_hex(official_colors_bgr[cluster_id])
                 color_index += 1
-        
+
         print("Successfully generated initial map from image.")
         return hex_color_map
     except Exception as e:
@@ -90,45 +88,48 @@ def create_map_from_image(image_bytes, rows, cols):
         return None
 
 # --- Flask Routes ---
+
 @app.route('/')
-def index():
-    """Serves the main HTML page."""
-    return render_template('index.html')
+@app.route('/game/<game_name>')
+def index(game_name='nqueens'):
+    """Serves the main HTML page and sets the active game for the frontend."""
+    if game_name not in ['nqueens', 'tango']:
+        game_name = 'nqueens' # Default to nqueens if URL is invalid
+    return render_template('index.html', active_game=game_name)
 
 @app.route('/process', methods=['POST'])
 def process_image_route():
     """
-    API endpoint for image processing. Receives an image and grid size,
+    API endpoint for N-Queens image processing. Receives an image and grid size,
     returns a color map for the frontend editor.
     """
     if 'puzzleImage' not in request.files:
         return jsonify({'error': 'No image file provided'}), 400
-    
+
     file = request.files['puzzleImage']
-    size_str = request.form.get('gridSize', '8') # Default to a single number
-    
-    # --- UPDATED LOGIC TO HANDLE SINGLE NUMBER INPUT ---
+
     try:
+        # Handle both "8" and "8x8" formats
+        size_str = request.form.get('gridSize', '8')
         if 'x' in size_str.lower():
             rows, cols = map(int, size_str.lower().split('x'))
         else:
             rows = cols = int(size_str)
     except ValueError:
         return jsonify({'error': 'Invalid grid size format'}), 400
-    # --- END OF UPDATED LOGIC ---
 
     image_bytes = file.read()
     color_map_hex = create_map_from_image(image_bytes, rows, cols)
-    
+
     if color_map_hex is None:
         return jsonify({'error': 'Failed to process image.'}), 500
-        
+
     return jsonify({'colorMap': color_map_hex, 'rows': rows, 'cols': cols})
 
 @app.route('/solve', methods=['POST'])
 def solve_route():
     """
-    API endpoint for solving. Receives a corrected numeric map
+    API endpoint for N-Queens solving. Receives a corrected numeric map
     and returns the final solution.
     """
     data = request.get_json()
@@ -137,10 +138,13 @@ def solve_route():
     if not board_map:
         return jsonify({'error': 'No map data provided'}), 400
 
-    print("Received corrected map, attempting to solve...")
+    print("Received corrected map for N-Queens, attempting to solve...")
     solution = solve_puzzle_logic(board_map)
-    
+
     return jsonify({'solution': solution})
+
+# Note: The Tango solver logic is entirely client-side (in script.js)
+# so it does not need a specific backend endpoint for solving.
 
 if __name__ == '__main__':
     app.run(debug=True, port=5000)

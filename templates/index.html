@@ -3,51 +3,117 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>LinkedIn N-Queens Solver</title>
+    <title>LinkedIn Puzzle Solver</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
     
     <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <script>
+        // Flask uses Jinja2 to render this value based on the URL
+        window.ACTIVE_GAME = "{{ active_game }}";
+    </script>
 </head>
 <body>
+    <nav class="navbar">
+        <div class="nav-container">
+            <span class="nav-brand">LinkedIn Puzzle Solver</span>
+            <div class="nav-links">
+                <a href="{{ url_for('index', game_name='nqueens') }}" id="link-nqueens" class="nav-link {% if active_game == 'nqueens' %}active{% endif %}">N-Queens Solver</a>
+                <a href="{{ url_for('index', game_name='tango') }}" id="link-tango" class="nav-link {% if active_game == 'tango' %}active{% endif %}">Tango Solver</a>
+            </div>
+            <!-- YEH SECTION ADD KIYA GAYA HAI -->
+            <div class="theme-switch-wrapper">
+                <label class="theme-switch" for="theme-toggle">
+                    <input type="checkbox" id="theme-toggle" />
+                    <span class="slider round"></span>
+                </label>
+            </div>
+            <!-- YAHAN TAK -->
+        </div>
+    </nav>
+    
     <div class="container">
-        <header>
-            <h1>N-Queens Puzzle Solver</h1>
-            <p>Upload a screenshot of your LinkedIn puzzle, and let AI solve it for you.</p>
-        </header>
-        
-        <main>
-            <div class="step">
-                <h2>Step 1: Upload Puzzle</h2>
-                <form id="upload-form">
-                    <div class="form-group">
-                        <label for="grid-size">Grid Size (e.g., 8 for 8x8):</label>
-                        <input type="number" id="grid-size" name="gridSize" value="8" min="4" max="15" required>
-                    </div>
-                    <div class="form-group">
-                        <label for="puzzle-image">Cropped Puzzle Screenshot:</label>
-                        <input type="file" id="puzzle-image" name="puzzleImage" accept="image/*" required>
-                    </div>
-                    <button type="submit">Process Image</button>
-                </form>
-            </div>
-
-            <div id="loader" class="loader hidden"></div>
-
-            <div id="editor-container" class="step hidden">
-                <h2>Step 2: Correct The Map</h2>
-                <p>Click a color from the palette, then paint the grid cells to match the puzzle.</p>
-                <div id="palette"></div>
-                <div id="grid-container"></div>
-                <button id="solve-btn">Solve Puzzle</button>
-            </div>
+        <div id="nqueens-app" class="game-container {% if active_game != 'nqueens' %}hidden{% endif %}">
+            <header>
+                <h1>N-Queens Puzzle Solver</h1>
+                <p>Upload a screenshot of your LinkedIn puzzle, and let AI solve it for you.</p>
+            </header>
             
-            <div id="result-container" class="step hidden">
-                <h2>Solution</h2>
-                <div id="solution-grid"></div>
-            </div>
-        </main>
+            <main>
+                <div class="step">
+                    <h2>Step 1: Upload Puzzle</h2>
+                    <form id="upload-form">
+                        <div class="form-group">
+                            <label for="grid-size">Grid Size (e.g., 8 for 8x8):</label>
+                            <input type="number" id="grid-size" name="gridSize" value="8" min="4" max="15" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="puzzle-image">Cropped Puzzle Screenshot:</label>
+                            <input type="file" id="puzzle-image" name="puzzleImage" accept="image/*" required>
+                        </div>
+                        <button type="submit">Process Image</button>
+                    </form>
+                </div>
+
+                <div id="loader" class="loader hidden"></div>
+
+                <div id="editor-container" class="step hidden">
+                    <h2>Step 2: Correct The Map</h2>
+                    <p>Click a color from the palette, then paint the grid cells to match the puzzle.</p>
+                    <div id="palette"></div>
+                    <div id="grid-container"></div>
+                    <button id="solve-btn">Solve Puzzle</button>
+                </div>
+                
+                <div id="result-container" class="step hidden">
+                    <h2>Solution</h2>
+                    <div id="solution-grid"></div>
+                </div>
+            </main>
+        </div>
+        
+        <div id="tango-app" class="game-container {% if active_game != 'tango' %}hidden{% endif %}">
+            <header>
+                <h1>Tango Binary Puzzle Solver</h1>
+                <p>Set the grid size and manually configure the Sun/Moon (0/1) values and Equal/Opposite constraints.</p>
+            </header>
+            
+            <main class="tango-main">
+                <div class="tango-controls-panel">
+                    <div class="step">
+                        <h2>Step 1: Grid Setup</h2>
+                        <div class="form-group">
+                            <label for="tango-grid-size">Grid Size N (Even, e.g., 6):</label>
+                            <input type="number" id="tango-grid-size" value="6" min="4" step="2" required>
+                        </div>
+                        <button id="tango-create-grid-btn">Create Empty Grid</button>
+                    </div>
+
+                    <div class="step">
+                        <h2>Step 2: Solve</h2>
+                        <button id="tango-solve-btn" disabled>Solve Puzzle</button>
+                        <button id="tango-reset-btn">Reset Grid & Constraints</button>
+                    </div>
+                    
+                    <div class="step tango-rules">
+                        <h2>Tango Rules</h2>
+                        <ul class="rules-list">
+                            <li><span class="text-yellow">🌞 (0)</span> & <span class="text-blue">🌙 (1)</span> must have N/2 count per row/col.</li>
+                            <li>No three adjacent symbols (000 or 111).</li>
+                            <li><span class="constraint-eq">=</span> means Equal (00 or 11).</li>
+                            <li><span class="constraint-op">x</span> means Opposite (01 or 10).</li>
+                        </ul>
+                        <div id="tango-status-message" class="status-message">Set N and click Create.</div>
+                    </div>
+                </div>
+                
+                <div id="tango-grid-area" class="tango-grid-area">
+                    <p class="text-muted">Tango Grid will appear here after setup.</p>
+                </div>
+            </main>
+        </div>
+        
     </div>
     <script src="{{ url_for('static', filename='script.js') }}"></script>
     
