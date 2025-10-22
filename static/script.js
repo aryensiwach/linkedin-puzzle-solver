@@ -88,13 +88,13 @@ document.addEventListener('DOMContentLoaded', () => {
                 this.paletteContainer.appendChild(colorBox);
             });
 
-            // Add a "Clear Grid" button for better UX
+            
             const clearBtn = document.createElement('button');
             clearBtn.textContent = 'Clear Grid';
             clearBtn.style.cssText = 'background-color: var(--text-muted); width: auto; margin-left: 1rem;';
             clearBtn.addEventListener('click', () => {
                  document.querySelectorAll('#grid-container .grid-cell').forEach(cell => {
-                     cell.style.backgroundColor = 'rgb(255, 255, 255)'; // Represents white in RGB
+                     cell.style.backgroundColor = 'rgb(255, 255, 255)'; 
                  });
             });
             this.paletteContainer.appendChild(clearBtn);
@@ -584,13 +584,13 @@ themeToggle.addEventListener('change', function() {
             const start = this.findNextEmpty(solvedGrid, 0, 0);
 
             if (start.r === this.N) {
-                alert(this.isValidSolution(solvedGrid) ? "Grid already solved and valid hai!" : "Grid full hai, par invalid hai.");
+                alert(this.isValidSolution(solvedGrid) ? "Grid already solved and valid" : "Grid full but invalid.");
                 return;
             }
 
             this.isSolving = true;
             this.solveBtn.disabled = true;
-            this.statusMsg.textContent = "Solving... Thoda wait karo, backtracking chal raha hai.";
+            this.statusMsg.textContent = "Solving... ";
             this.statusMsg.className = "status-message text-yellow-500 font-bold";
             
             // Use setTimeout to allow UI to update (show loading message) before starting heavy computation
@@ -598,10 +598,10 @@ themeToggle.addEventListener('change', function() {
                 if (this.solve(solvedGrid, 0, 0)) {
                     this.grid = solvedGrid;
                     this.renderGrid();
-                    this.statusMsg.textContent = "Solved! Solution mil gaya, check karo.";
+                    this.statusMsg.textContent = "Solved! ";
                     this.statusMsg.className = "status-message text-green-500 font-bold";
                 } else {
-                    this.statusMsg.textContent = "Solution nahi mila. Constraints ya values check karo.";
+                    this.statusMsg.textContent = "Solution not found, check grid again";
                     this.statusMsg.className = "status-message text-red-500 font-bold";
                 }
                 this.isSolving = false;
